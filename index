@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+
+struct Task {
+    std::string description;
+    bool completed;
+
+    Task(const std::string& desc) : description(desc), completed(false) {}
+};
+
+class TodoList {
+private:
+    std::vector<Task> tasks;
+
+public:
+    void addTask(const std::string& desc) {
+        tasks.push_back(Task(desc));
+        std::cout << "Task added: " << desc << std::endl;
+    }
+
+    void markTaskComplete(int index) {
+        if (index >= 0 && index < tasks.size()) {
+            tasks[index].completed = true;
+            std::cout << "Task marked as complete: " << tasks[index].description << std::endl;
+        } else {
+            std::cout << "Invalid task index." << std::endl;
+        }
+    }
+
+    void displayTasks() {
+        if (tasks.empty()) {
+            std::cout << "No tasks in the to-do list." << std::endl;
+        } else {
+            std::cout << "To-Do List:" << std::endl;
+            for (size_t i = 0; i < tasks.size(); ++i) {
+                std::cout << "[" << (tasks[i].completed ? "X" : " ") << "] " << i + 1 << ". " << tasks[i].description << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    TodoList todoList;
+
+    while (true) {
+        std::cout << "\nMenu:\n1. Add Task\n2. Mark Task as Complete\n3. Display Tasks\n4. Quit\nEnter your choice: ";
+        int choice;
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter task description: ";
+                std::cin.ignore(); // Clear the newline character from the buffer
+                std::string desc;
+                std::getline(std::cin, desc);
+                todoList.addTask(desc);
+                break;
+            case 2:
+                std::cout << "Enter the index of the task to mark as complete: ";
+                int index;
+                std::cin >> index;
+                todoList.markTaskComplete(index - 1); // Subtract 1 to convert to 0-based index
+                break;
+            case 3:
+                todoList.displayTasks();
+                break;
+            case 4:
+                std::cout << "Exiting the application. Goodbye!\n";
+                return 0;
+            default:
+                std::cout << "Invalid choice. Please enter a valid option.\n";
+        }
+    }
+
+    return 0;
+}
